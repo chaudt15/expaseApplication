@@ -1,0 +1,335 @@
+<div [@dialog] *ngIf="visible"  class="dialog">
+<div *ngIf = "!checkoutFinalized" class="secured-header"><a><span class="glyphicon glyphicon-lock"></span>Payments Protected with 256-Bit Encryption </a></div>
+
+<div class="main-checkout-container" *ngIf = "!checkoutFinalized">
+<div class="row" >
+<div class="col-md-4 order-details pull-right">
+<div class="time-remaining-header">
+<a><span class="glyphicon glyphicon-time"></span>Price locked at {{unitPrice| currency:'USD':true:'1.2-2'}} for {{minutes}}:{{seconds| number: '2.0'}}</a>
+</div>
+<div class="white-bg">
+<div class="image-product-overlap">
+  <div class="quantity-image-overlay"><a style="text-decoration: none;">X<span>{{amount}}</span></a></div>
+    <img src="{{products.imageTwo}}" style="pointer-events: none;" class="img-responsive img-thumbnail">
+    </div>
+  <div class="panel order-summary-container">
+      <div class="panel-heading order-summary">
+        <h3 class="panel-title order-summary-title">Order Summary</h3>
+      </div>
+     <ul class="list-group">
+        <li class="list-group-item"><strong>Product:</strong> <span>{{products.name}}</span></li>
+        <li class="list-group-item"><strong>Quantity:</strong> <span>{{amount}}</span></li>
+        <li class="list-group-item"><strong>Unit Price:</strong> <span>{{unitPrice| currency:'USD':true:'1.2-2'}}</span></li>
+        <li class="list-group-item"><strong>Shipping:</strong> <span>Free Shipping</span></li>
+        <li class="list-group-item"><strong>Total:</strong> <span style="color:#009103">{{totalPrice| currency:'USD':true:'1.2-2'}}</span> </li>
+      </ul>
+    </div>
+
+
+
+    <button class = "close-button" *ngIf="closable" (click)="close()" aria-label="Close"><a>Release Price and Exit Checkout</a></button>
+   
+   </div>
+</div>
+
+
+
+<div class="col-md-8 pull-left">
+<div class="white-bg">
+
+<img src="http://hulte.com/temp/steps1.svg" *ngIf="section1" style="pointer-events: none;" class="center-block step-nav">
+<img src="http://hulte.com/temp/steps2.svg" *ngIf="section2" style="pointer-events: none;" class="center-block step-nav">
+<img src="http://hulte.com/temp/steps3.svg" *ngIf="section3" style="pointer-events: none;" class="center-block step-nav">
+
+
+
+
+<div *ngIf="section1">
+  <div class="sectionOne">
+<div class="form-style-6">
+<h1 class="headd">How many would you like?</h1>
+<div class="row">
+      <div class="col-md-3 box-cont" (click)="quantity1()">
+        <div class="box-quan active" *ngIf = "quan1"><span>1</span></div>
+        <div class="box-quan inactive" *ngIf = "!quan1"><span>1</span></div>
+      </div>
+      <div class="col-md-3 box-cont" (click)="quantity2()">
+        <div class="box-quan active" *ngIf = "quan2"><span>2</span></div>
+        <div class="box-quan inactive" *ngIf = "!quan2"><span>2</span></div>
+      </div>
+      <div class="col-md-3 box-cont" (click)="quantity3()">
+        <div class="box-quan active" *ngIf = "quan3"><span>3</span></div>
+        <div class="box-quan inactive" *ngIf = "!quan3"><span>3</span></div>
+      </div>
+      <div class="col-md-3 box-cont" (click)="quantity4()">
+        <div class="box-quan active" *ngIf = "quan4"><span>4</span></div>
+        <div class="box-quan inactive" *ngIf = "!quan4"><span>4</span></div>
+      </div>
+</div>
+</div>
+
+<div class="row">     
+<!--<div class="form-style-6">-->
+<h1 class="headd">Where would you like your item(s) shipped?</h1>
+<form autocomeplete = "on" novalidate #f="ngForm" (ngSubmit)="changeSection()">
+  <div class="col-md-6">
+
+  <div class="form-group">
+ 
+          <input type="text"  id="firstName" class="form-control" placeholder="First Name" minlength="2" required
+                 [(ngModel)]="model.firstName" name="firstName" required>
+  </div>
+
+
+   <div class="form-group">
+   
+          <input type="text"  id="lastName" class="form-control" placeholder="Last Name" minlength="2" required="true" 
+                 [(ngModel)]="model.lastName" required name="lastName">
+        </div>   
+
+
+      <div class="form-group">
+          <input type="text" id="shippingStreet" class="form-control" placeholder="Street Address" minlength="4" required="true" 
+                 [(ngModel)]="model.shippingStreet" required name="shippingStreet">
+        </div>        
+   </div>            
+   <div class="col-md-6">
+         <div class="form-group">
+          <input type="text"  id="shippingZip" class="form-control" placeholder="Zip Code" 
+                 [(ngModel)]="model.shippingZip" required name="shippingZip" maxlength="5" minlength="5" pattern="[0-9]+"  required="true">
+        </div>    
+
+       <div class="form-group">
+          <input type="text" id="shippingCity" class="form-control" placeholder="City" required="true" 
+                 [(ngModel)]="model.shippingCity" required name="shippingCity">
+        </div>    
+
+       <div class="form-group">    
+          <input type="text"  id="shippingState" class="form-control" placeholder="State" required="true" 
+                 [(ngModel)]="model.shippingState" required name="shippingState">
+        </div>
+   </div>  
+     <div class="row">
+      <button class="button-next" type="submit" [disabled]="!f.valid"><span>Next</span></button>
+      </div>
+    </form> 
+
+ <!--</div>-->
+</div>
+
+   
+  </div>
+</div>
+
+
+<div *ngIf="section2">
+<div class="row">
+  <div class="sectionTwo">
+    <div class="credit-card-info">
+    <div class="form-style-6">
+      <h1 class="headd">Enter Payment Details</h1>
+      <div id="dropin-container"></div>
+      <form id="checkout-form" action="http://expase.com:3300/checkouts" method="post">
+      <div class="row">
+        <button type="submit" *ngIf="!nonReceived" class="button button-transaction"><span>Confirm Payment Method</span></button>  
+      </div>  
+      </form>
+      </div>
+    </div>
+
+
+    <h1 *ngIf="nonReceived" class="headd">Enter Billing Details</h1>
+    <form autocomplete="on" novalidate #g="ngForm" (ngSubmit)="changeSection2()">
+    <div *ngIf="nonReceived">
+<div class="col-md-6">
+
+  <div class="form-group">
+          <input type="text"  id="billingFirst" class="form-control" placeholder="First Name" minlength="2" required
+                 [(ngModel)]="model.billingFirst" name="firstName" required>
+  </div>
+
+
+   
+
+   <div class="form-group">
+          <input type="text"  class="form-control" id="billingStreet" placeholder="Street" required required="true"
+                 [(ngModel)]="model.billingStreet" name="billingStreet">
+        </div>               
+
+         <div class="form-group">
+          <input type="text"  class="form-control" id="billingZip" placeholder="Zip Code" required required="true"
+                 [(ngModel)]="model.billingZip" name="billingZip">
+        </div>    
+        </div>
+        <div class="col-md-6">
+         <div class="form-group">
+          <input type="text"  id="billingLast" class="form-control" placeholder="Last Name" minlength="2" required="true" 
+                 [(ngModel)]="model.billingLast" required name="lastName">
+        </div>  
+       <div class="form-group">
+          <input type="text"  class="form-control" id="billingCity" placeholder="City" required required="true"
+                 [(ngModel)]="model.billingCity" name="billingCity">
+        </div>    
+
+       <div class="form-group">
+          <input type="text"  class="form-control" id="billingState" placeholder="State" required required="true"
+                 [(ngModel)]="model.billingState" name="billingState">
+        </div>  
+      </div>
+    </div>
+    
+    <button class="button-next" type="submit" *ngIf="nonReceived" [disabled]="!g.valid"><span>Next</span></button>
+     
+   </form>
+       <button class="button-back" (click)="backSection1()"><span>Back</span></button>
+
+    </div>
+    </div>
+</div>
+
+
+<!--********************BEGIN PAGE 3**************************-->
+<div  *ngIf="section3">
+<div class="form-style-6">
+<h1 *ngIf="nonReceived" class="headd">Confirm Your Order</h1>
+  <div class="row shipping-billing-row">
+    <div class="col-md-6">
+      <div class="row shipping-row">
+      <a>Shipping Details</a>
+      </div>
+      <div class="row shipping-summary">
+      <a>
+        {{model.firstName}} {{model.lastName}}<br>
+        {{model.shippingStreet}}<br>
+        {{model.shippingCity}}, {{model.shippingState}}, {{model.shippingZip}}</a>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+    <div class="row billing-row">
+      <a>Billing Details</a>
+      </div>
+      <div class="row billing-summary">
+      <a>
+      {{model.billingFirst}} {{model.billingLast}}<br>
+        {{model.billingStreet}}<br>
+        {{model.billingCity}}, {{model.billingState}}, {{model.billingZip}}</a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row item-final-row">
+    <div class="col-md-12">
+      <div class="row product-details-row">
+        <a>Shipping</a>
+      </div>
+    <table class="table">
+    <thead>
+      <tr>
+        <th>Shipping Method</th>
+        <th>Item Condition</th>
+        <th>Tracking Included</th>
+        <th>Total Shipping Cost</th>
+        
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="info">
+        <td>FedEx Priority Parcel</td>
+        <td>New in Box</td>
+        <td>Yes</td>
+        <td>${{shippingTotal}}.00</td>
+
+      </tr>
+     
+    </tbody>
+  </table>
+    </div>
+  </div>
+
+
+  <div class="row item-final-row">
+    <div class="col-md-12">
+      <div class="row product-details-row">
+        <a>Order Details</a>
+      </div>
+      <div class="product-table">
+        
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Grand Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="success">
+        <td>{{products.name}}</td>
+        <td>{{amount}}</td>
+        <td>{{unitPrice| currency:'USD':true:'1.2-2'}}</td>
+        <td><strong>{{totalPrice| currency:'USD':true:'1.2-2'}}</strong></td>
+      </tr>
+     
+    </tbody>
+  </table>
+
+      </div>
+    </div>
+  </div>
+
+        <div class="row trans-button-row">
+          <button (click)="onClickForm()" class="button-transaction"><span>SUBMIT ORDER</span></button>
+        </div>
+        <div class="row">
+          <button class="button-back"  (click)="backSection2()"><span>Back</span></button>
+        </div>
+  </div>  
+  </div>
+<!--***********************END PAGE 3**************************-->
+
+  </div>
+  </div>
+</div>
+</div>
+
+<div  *ngIf="!checkoutFinalized" class="modal-footer">
+<div class="logos-img">
+  <img src="src/AllPaymentLogos.png">
+  </div>
+</div>
+
+
+
+<!--BEGIN TRANSACTION COMPLETE SECTION-->
+<!--**********************************-->
+<!--**********************************-->
+<!--**********************************-->
+  <div class="transaction-page" *ngIf="checkoutFinalized">
+    <div class="steal-header"><a>What a Steal!</a></div>
+    <div class="order-success-header"><a><img class="checkmark" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUwOC41MiA1MDguNTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUwOC41MiA1MDguNTI7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgo8Zz4KCTxnPgoJCTxnPgoJCQk8cGF0aCBkPSJNMjU0LjI2LDBDMTEzLjg0NSwwLDAsMTEzLjg0NSwwLDI1NC4yNnMxMTMuODQ1LDI1NC4yNiwyNTQuMjYsMjU0LjI2ICAgICBzMjU0LjI2LTExMy44NDUsMjU0LjI2LTI1NC4yNlMzOTQuNjc1LDAsMjU0LjI2LDB6IE0zNzIuMDQ2LDE4My45MjVsLTEyMS43OSwxODYuMTVsLTAuMDk1LDAuMDY0bC0xLjc4LDIuOTU2bC0zLjgxNCwyLjc2NSAgICAgbC0wLjk4NSwwLjY2N2wtNi4yMjksMi42MDZsLTIuMTYxLDAuNTA5bC01LjMzOSwwLjEyN2wtMy43MTktMC42MzZsLTMuNjU1LTEuNDNsLTMuMDUxLTEuMjA4bC0xLjY4NC0xLjY4NWwtMC44MjYtMC41MDkgICAgIGwtNzAuOTA3LTY1LjU2N2MtOS4wMjYtOC4zNTktOS41NjctMjIuNDM4LTEuMjQtMzEuNDMzYzguMzI3LTguOTk0LDIyLjQwNy05LjU2NywzMS40MzMtMS4yNGw1MS4zMjksNDcuNDgzTDMzNC43OTcsMTU5LjU4ICAgICBjNi43MzgtMTAuMjY2LDIwLjUzMS0xMy4xNTgsMzAuNzk3LTYuNDUyQzM3NS44OTEsMTU5Ljg2NiwzNzguNzg0LDE3My42NTksMzcyLjA0NiwxODMuOTI1eiIgZmlsbD0iIzM2Y2U0OCIvPgoJCTwvZz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />Your Order Has Been Placed Successfully</a></div>
+    <div class="thumb-transaction">
+      <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <img src="{{products.imageTwo}}" style="pointer-events: none;" class="img-responsive img-thumbnail">
+      </div>
+      </div>
+  </div>
+
+      <div class="end-product"><div class="row"><a>{{products.name}}(x{{amount}})</a></div></div>
+      <div class="end-orderid"><div class="row"><a>Order ID: #{{rtransactionID}}</a></div></div>
+      <div class="end-email"><div class="row"><a>You will receive an e-mail confirmation soon with your order details.</a></div></div>
+      <div class="end-come"><div class="row"><a>Come back tomorrow to see what our next deal is!</a></div></div>
+      <div class="button-flow">
+        <button class="end-close" (click)="close()"><a>Close</a></button>
+      </div>
+  </div>
+<!--**********************************-->
+<!--**********************************-->
+<!--**********************************-->
+<!--**********************************-->
+</div>
+<div *ngIf="visible" class="overlay" (click)="close()"></div>
